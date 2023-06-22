@@ -2,7 +2,8 @@ import * as dotenv from 'dotenv';
 import cors from 'cors'
 import routes from './components/routes/index.routes';
 import express, { Request, Response, Express, NextFunction } from 'express';
-import HomeRoute from './components/routes/default';
+import Configs from './components/configs/index.configs';
+
 
 
 
@@ -17,12 +18,15 @@ const app: Express = express();
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 
+// * Called the Mongoose Config here
 
+Configs.ConfigMongoose("Server");
 
 
 // * use the all route over here
 
-app.use(HomeRoute);
+app.use(routes.HomeRoute);
+app.use(routes.logRoutes);
 
 
 
