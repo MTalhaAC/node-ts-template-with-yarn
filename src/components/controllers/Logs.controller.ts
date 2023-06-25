@@ -8,5 +8,9 @@ export const getLogs = async (req:Request,res:Response):Promise<void> => {
 };
 
 export const createLogs = async(req:Request,res:Response):Promise<void> =>{
-    res.json("Post Logs Working Correctly")
+    try {
+        res.json("Post Logs Working Correctly");
+    } catch (error) {
+        res.errored;
+    }
 }
