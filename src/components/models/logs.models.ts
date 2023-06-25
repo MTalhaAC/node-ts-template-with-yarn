@@ -8,9 +8,9 @@ export interface ILog {
   userIpAddress: string;
   requestMethod: string;
   requestUrl: string;
-  requestPayload?: any;
+  requestPayload?: Record<string, any>;
   responseStatusCode: number;
-  responsePayload?: any;
+  responsePayload?: Record<string, any>;
   userAgent?: string;
   errorMessage?: Error | null|string;
 }

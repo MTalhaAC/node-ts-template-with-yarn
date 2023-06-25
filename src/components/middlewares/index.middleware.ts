@@ -9,22 +9,23 @@ const logsMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
     const originalSend = res.json;
 
+    const meta: ILog = {
+        endpoint: `${req.protocol}://${req.rawHeaders[1]}`,
+        requestMethod: req.method,
+        requestUrl: req.originalUrl,
+        responseStatusCode: res.statusCode,
+        timestamp: new Date(),
+        userId: "",
+        userIpAddress: req.ip,
+        errorMessage: req.errored?.message,
+        requestPayload: { Payload: req?.body },
+        userAgent: req.headers['user-agent']
+    };
+
     res.json = function (body) {
         console.log('Response Content:', body);
-        const meta: ILog = {
-            endpoint: `${req.protocol}://${req.rawHeaders[1]}`,
-            requestMethod: req.method,
-            requestUrl: req.originalUrl,
-            responseStatusCode: res.statusCode,
-            timestamp: new Date(),
-            userId: "",
-            userIpAddress: req.ip,
-            errorMessage: req.errored?.message,
-            requestPayload: { Payload: req?.body },
-            responsePayload: { payload: body },
-            userAgent: req.headers['user-agent']
-        };
 
+        meta.responsePayload = {body};
         utils.createLogs({
             db: process.env.MONGODB_URL + "Server",
             collection: "logs",
