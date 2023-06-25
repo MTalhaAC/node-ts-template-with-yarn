@@ -3,7 +3,8 @@ import cors from 'cors'
 import routes from './components/routes/index.routes';
 import express, { Request, Response, Express, NextFunction } from 'express';
 import Configs from './components/configs/index.configs';
-
+import middlewares from './components/middlewares/index.middleware';
+import morgan from 'morgan';
 
 
 
@@ -17,6 +18,11 @@ const app: Express = express();
 
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({extended: true}));
+app.use(morgan('dev'));
+
+// * middleware to handle the logs functionality.
+app.use(middlewares.logsMiddleware);
 
 // * Called the Mongoose Config here
 
@@ -27,6 +33,7 @@ Configs.ConfigMongoose("Server");
 
 app.use(routes.HomeRoute);
 app.use(routes.logRoutes);
+
 
 
 
