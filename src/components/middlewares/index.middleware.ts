@@ -1,10 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ILog } from "../models/logs.models";
 import utils from "../utils/index.utils";
-
-
-
-const Logs_Path: string = process.env.MONGODB_URL + "Server";
+import { FileLogsMiddleware } from "./filelogs.middleware";
 
 export type TOptionalILogs = Partial<Omit<ILog,"userId" & "userAgent">>
 
@@ -28,11 +25,9 @@ const logsMiddleware = ( req: Request, res: Response, next: NextFunction ) =>
 
   res.send = function ( body )
   {
-    console.log( 'Response Content:', body );
-
     meta.responsePayload = { body };
     utils.createLogs( {
-      db: Logs_Path,
+      db: process.env.MONGODB_URL + "Server",
       collection: "logs",
       level: "info",
       options: { useUnifiedTopology: true },
@@ -46,15 +41,16 @@ const logsMiddleware = ( req: Request, res: Response, next: NextFunction ) =>
 const ErrorLogs = (meta:{ error: unknown} & TOptionalILogs) =>
 {
   utils.createErrorLogs( {
-    db: Logs_Path,
-    collection:"Errors",
+    db: process.env.MONGODB_URL + "Server",
+    collection:"errors",
     level:"error",
     options: { useUnifiedTopology: true },
-  } ).log('error','Errors_Logs',{...meta})
+  } ).log('error','Errors_Logs',meta);
 }
 const middlewares = {
   logsMiddleware,
   ErrorLogs,
+  FileLogsMiddleware,
 }
 
 export default middlewares;

@@ -23,7 +23,7 @@ app.use(morgan('dev'));
 
 // * middleware to handle the logs functionality.
 app.use(middlewares.logsMiddleware);
-
+app.use(middlewares.FileLogsMiddleware);
 // * Called the Mongoose Config here
 
 Configs.ConfigMongoose("Server");
