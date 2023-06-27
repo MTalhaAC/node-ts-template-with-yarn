@@ -23,7 +23,7 @@ export const createErrorLogs = createLogs;
 
 export const createProperties = (req: Request, res: Response) => {
   return {
-    endpoint: `${req.protocol}://${req.rawHeaders[1]}`,
+    endpoint: `${req.protocol}://${req.headers.host}`,
     requestMethod: req.method,
     requestUrl: req.originalUrl,
     timestamp: new Date(),

@@ -6,8 +6,9 @@ import { FileLogsMiddleware } from "./filelogs.middleware";
 export type TOptionalILogs = Partial<Omit<ILog, "userId" & "userAgent">>;
 
 const logsMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.headers)
   const meta: ILog = {
-    endpoint: `${req.protocol}://${req.rawHeaders[req.rawHeaders.length - 3]}`,
+    endpoint: `${req.protocol}://${req.headers.host}`,
     requestMethod: req.method,
     requestUrl: req.originalUrl,
     responseStatusCode: res.statusCode,
