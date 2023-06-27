@@ -8,7 +8,7 @@ export const FileLogsMiddleware = (
   next: NextFunction
 ) => {
   const meta: ILog = {
-    endpoint: `${req.protocol}://${req.rawHeaders[1]}`,
+    endpoint: `${req.protocol}://${req.rawHeaders[req.rawHeaders.length -3]}`,
     requestMethod: req.method,
     requestUrl: req.originalUrl,
     responseStatusCode: res.statusCode,

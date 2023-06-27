@@ -3,9 +3,14 @@ import { createErrorLogs, createLogs, createProperties, handleTheErrorLogs,local
 
 
 
+
+
+
+
 const createNewModels = <T extends Schema>(model: Model<T>, schema: Schema) => {
   return new model({ ...schema });
 };
+
 
 
 const utils = {
@@ -14,7 +19,7 @@ const utils = {
   createErrorLogs,
   createProperties,
   handleTheErrorLogs,
-  localLogs
+  localLogs,
 };
 
 export default utils;

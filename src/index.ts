@@ -6,10 +6,12 @@ import Configs from './components/configs/index.configs';
 import middlewares from './components/middlewares/index.middleware';
 import morgan from 'morgan';
 
-
-
 // * Config the .env file here
 dotenv.config();
+
+export const LOCAL_MONGODB_URL: string = process.env.LOCAL_MONGODB_URL!;
+export const MONGODB_URL: string = process.env.MONGODB_URL!;
+
 
 // * create the instence of Express 
 const app: Express = express();
@@ -33,6 +35,8 @@ Configs.ConfigMongoose("Server");
 
 app.use(routes.HomeRoute);
 app.use(routes.logRoutes);
+
+
 
 
 

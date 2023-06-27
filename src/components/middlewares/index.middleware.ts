@@ -3,13 +3,11 @@ import { ILog } from "../models/logs.models";
 import utils from "../utils/index.utils";
 import { FileLogsMiddleware } from "./filelogs.middleware";
 
-export type TOptionalILogs = Partial<Omit<ILog,"userId" & "userAgent">>
+export type TOptionalILogs = Partial<Omit<ILog, "userId" & "userAgent">>;
 
-
-const logsMiddleware = ( req: Request, res: Response, next: NextFunction ) =>
-{
+const logsMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const meta: ILog = {
-    endpoint: `${req.protocol}://${req.rawHeaders[ 1 ]}`,
+    endpoint: `${req.protocol}://${req.rawHeaders[req.rawHeaders.length - 3]}`,
     requestMethod: req.method,
     requestUrl: req.originalUrl,
     responseStatusCode: res.statusCode,
@@ -17,40 +15,37 @@ const logsMiddleware = ( req: Request, res: Response, next: NextFunction ) =>
     userId: "",
     userIpAddress: req.ip,
     requestPayload: { Payload: req?.body },
-    userAgent: req.headers[ 'user-agent' ]
+    userAgent: req.headers["user-agent"],
   };
 
-  let originalSend = res.send;
   // * response payload tracking for json response only
-
-  res.send = function ( body )
-  {
-    meta.responsePayload = { body };
-    utils.createLogs( {
-      db: process.env.MONGODB_URL + "Server",
+  utils
+    .createLogs({
+      db: process.env.LOCAL_MONGODB_URL + "Server",
       collection: "logs",
       level: "info",
       options: { useUnifiedTopology: true },
-    } ).log( 'info', "Info-Logs", meta );
-
-    return originalSend.call( this, body );
-  };
+    })
+    .log("info", "Info-Logs", meta);
   next();
-}
+};
 
-const ErrorLogs = (meta:{ error: unknown} & TOptionalILogs) =>
-{
-  utils.createErrorLogs( {
-    db: process.env.MONGODB_URL + "Server",
-    collection:"errors",
-    level:"error",
-    options: { useUnifiedTopology: true },
-  } ).log('error','Errors_Logs',meta);
-}
+
+const ErrorLogs = (meta: { error: unknown } & TOptionalILogs) => {
+  utils
+    .createErrorLogs({
+      db: process.env.LOCAL_MONGODB_URL + "Server",
+      collection: "errors",
+      level: "error",
+      options: { useUnifiedTopology: true },
+    })
+    .log("error", "Errors_Logs", meta);
+};
+
 const middlewares = {
   logsMiddleware,
   ErrorLogs,
   FileLogsMiddleware,
-}
+};
 
 export default middlewares;
