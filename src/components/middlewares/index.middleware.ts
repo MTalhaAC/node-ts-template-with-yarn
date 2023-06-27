@@ -3,10 +3,18 @@ import { ILog } from "../models/logs.models";
 import utils from "../utils/index.utils";
 import { FileLogsMiddleware } from "./filelogs.middleware";
 
+/*
+* Custome Type for the file logs object.
+ */
 export type TOptionalILogs = Partial<Omit<ILog, "userId" & "userAgent">>;
 
+/**
+ * * logsMiddleware is middleware that creates the logs collections in database and generate the log documents.
+ * @param req  type Request
+ * @param res  type Response
+ * @param next type NextFunction
+ */
 const logsMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  console.log(req.headers)
   const meta: ILog = {
     endpoint: `${req.protocol}://${req.headers.host}`,
     requestMethod: req.method,
@@ -31,7 +39,10 @@ const logsMiddleware = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-
+/**
+ * * ErrorLogs is a function not middleware but used the same signature like middleware. It used to create the errors collection and generates error logs documents. 
+ * @param meta  type {error:unknown}
+ */
 const ErrorLogs = (meta: { error: unknown } & TOptionalILogs) => {
   utils
     .createErrorLogs({
