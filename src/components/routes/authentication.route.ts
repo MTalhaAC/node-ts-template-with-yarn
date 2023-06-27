@@ -1,18 +1,19 @@
 import { Router } from "express";
+import Controllers from "../controllers/index.controller";
 
 export const AuthenticationRoutes: Router = Router();
 
 // * Login routes
-AuthenticationRoutes.get("/auth/login");
-AuthenticationRoutes.post("/auth/login");
+AuthenticationRoutes.get("/auth/login",Controllers.Login.Login_GET);
+AuthenticationRoutes.post("/auth/login",Controllers.Login.Login_POST);
 
 //* Registration routes
-AuthenticationRoutes.get("/auth/register");
-AuthenticationRoutes.post("/auth/login");
+AuthenticationRoutes.get("/auth/register",Controllers.Registration.Register_GET);
+AuthenticationRoutes.post("/auth/login",Controllers.Registration.Register_POST);
 
 //* Logout routes
-AuthenticationRoutes.get("/auth/logout");
-AuthenticationRoutes.post('/auth/logout');
+AuthenticationRoutes.post("/auth/logout",Controllers.Logout.Logout_POST);
+
 
 
 
