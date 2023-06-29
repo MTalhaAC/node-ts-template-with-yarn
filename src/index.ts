@@ -36,7 +36,7 @@ Configs.ConfigMongoose("Server");
 app.use(routes.HomeRoute);
 app.use(routes.logRoutes);
 app.use(routes.AuthenticationRoutes);
-
+app.use(routes.TokenRoutes);
 
 
 
