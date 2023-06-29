@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import utils from "../utils/index.utils";
 import { IUser, Users } from "../models/user.models";
 import { returnType } from "../types/global";
+import services from "../services/index.service";
 
 export const Login_GET = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -9,7 +10,9 @@ export const Login_GET = async (req: Request, res: Response): Promise<void> => {
      * Here send the user credentials using token based authentication soon.
      */
     res.send("<h1>Login Response</h1>");
-  } catch (error) {}
+  } catch (error) {
+    services.handleTheErrorLogs(req,res,error);
+  }
 };
 
 export const Login_POST = async (
@@ -42,6 +45,7 @@ export const Login_POST = async (
 
     res.status(200).json({ message: "Login Successfully" });
   } catch (error) {
+    services.handleTheErrorLogs(req,res,error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -83,6 +87,7 @@ export const Login_PUT = async (req: Request, res: Response): Promise<void> => {
 
     res.status(200).json({ message: "Update successfully" });
   } catch (error) {
+    services.handleTheErrorLogs(req,res,error);
     res.status(500).json({ message: "Server error" });
   }
 };
