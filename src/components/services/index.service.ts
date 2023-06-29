@@ -1,5 +1,5 @@
 import { Model, Schema } from "mongoose";
-import { createErrorLogs, createLogs, createProperties, handleTheErrorLogs,localLogs } from "./logs.utils";
+import { createErrorLogs, createLogs, createProperties, handleTheErrorLogs,localLogs } from "./logs.service";
 
 
 
@@ -13,7 +13,7 @@ const createNewModels = <T extends Schema>(model: Model<T>, schema: Schema) => {
 
 
 
-const utils = {
+const services = {
   createNewModels,
   createLogs,
   createErrorLogs,
@@ -22,4 +22,4 @@ const utils = {
   localLogs,
 };
 
-export default utils;
+export default services;

@@ -1,6 +1,6 @@
 import winston, { Logger, transport, transports } from "winston";
 import middlewares, { TOptionalILogs } from "../middlewares/index.middleware";
-import utils from "./index.utils";
+import services from "./index.service";
 import { MongoDBConnectionOptions } from "winston-mongodb";
 import "winston-mongodb";
 import { Request, Response } from "express";
@@ -36,7 +36,7 @@ export const handleTheErrorLogs = (
   error: unknown
 ) => {
   middlewares.ErrorLogs({
-    ...utils.createProperties(req, res),
+    ...services.createProperties(req, res),
     error,
   });
 };

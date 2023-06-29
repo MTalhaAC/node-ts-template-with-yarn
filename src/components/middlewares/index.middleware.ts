@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ILog } from "../models/logs.models";
-import utils from "../utils/index.utils";
+import services from "../services/index.service";
 import { FileLogsMiddleware } from "./filelogs.middleware";
 
 /*
@@ -28,7 +28,7 @@ const logsMiddleware = (req: Request, res: Response, next: NextFunction) => {
   };
 
   // * response payload tracking for json response only
-  utils
+  services
     .createLogs({
       db: process.env.LOCAL_MONGODB_URL + "Server",
       collection: "logs",
@@ -44,7 +44,7 @@ const logsMiddleware = (req: Request, res: Response, next: NextFunction) => {
  * @param meta  type {error:unknown}
  */
 const ErrorLogs = (meta: { error: unknown } & TOptionalILogs) => {
-  utils
+  services
     .createErrorLogs({
       db: process.env.LOCAL_MONGODB_URL + "Server",
       collection: "errors",

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ILog } from "../models/logs.models";
-import utils from "../utils/index.utils";
+import services from "../services/index.service";
 
 export const FileLogsMiddleware = (
   req: Request,
@@ -16,6 +16,6 @@ export const FileLogsMiddleware = (
     userId: "",
     userIpAddress: req.ip,
   };
-  utils.localLogs(meta);
+  services.localLogs(meta);
   next();
 };

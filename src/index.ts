@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 import cors from 'cors'
 import routes from './components/routes/index.routes';
-import express, { Request, Response, Express, NextFunction } from 'express';
+import express, { Express } from 'express';
 import Configs from './components/configs/index.configs';
 import middlewares from './components/middlewares/index.middleware';
 import morgan from 'morgan';
