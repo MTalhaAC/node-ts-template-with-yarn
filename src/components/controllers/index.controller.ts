@@ -1,4 +1,4 @@
-import { Login_GET,Login_POST } from "./Login.controller";
+import { Login_GET,Login_POST, Login_PUT } from "./Login.controller";
 import { Logout_POST } from "./Logout.controller";
 import { getLogs, createLogs } from "./Logs.controller";
 import { Register_GET, Register_POST } from "./Registration.controller";
@@ -12,7 +12,8 @@ const Controllers = {
     },
     Login:{
         Login_GET,
-        Login_POST
+        Login_POST,
+        Login_PUT
     },
     Logout:{
         Logout_POST,
