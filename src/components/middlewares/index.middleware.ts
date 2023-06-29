@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { ILog } from "../models/logs.models";
 import services from "../services/index.service";
 import { FileLogsMiddleware } from "./filelogs.middleware";
+import { isAuthenticated } from "./passport.middleware";
 
 /*
 * Custome Type for the file logs object.
@@ -58,6 +59,7 @@ const middlewares = {
   logsMiddleware,
   ErrorLogs,
   FileLogsMiddleware,
+  isAuthenticated
 };
 
 export default middlewares;

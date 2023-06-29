@@ -1,6 +1,4 @@
-import { Request,Response} from "express";
-
-
+import { NextFunction, Request,Response} from "express";
 
 export const Login_GET = async (req:Request,res:Response):Promise<void> =>{
     try {
@@ -11,10 +9,10 @@ export const Login_GET = async (req:Request,res:Response):Promise<void> =>{
     }
 }
 
-export const Login_POST = async(req:Request,res:Response):Promise<void> => {
+export const Login_POST = async(req:Request,res:Response,next:NextFunction):Promise<void> => {
     try {
-        res.send("<h1>Login Response From Post Method</h1>");
+       
     } catch (error) {
-        
+        res.status(500).json({ message: 'Server error' });
     }
 }
