@@ -1,7 +1,7 @@
 import { Model, Schema } from "mongoose";
 import { createErrorLogs, createLogs, createProperties, handleTheErrorLogs,localLogs } from "./logs.service";
 import { createTheJWTForClient } from "./passport.service";
-
+import { sessionStore } from "./session-store.service";
 
 
 
@@ -23,7 +23,7 @@ const services = {
   handleTheErrorLogs,
   localLogs,
   createTheJWTForClient,
-
+  sessionStore,
 };
 
 export default services;

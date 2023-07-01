@@ -8,8 +8,8 @@ export const SECRET_KEY: string = "hello fucker!";
 const options: StrategyOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: SECRET_KEY, // Replace with your own secret key
-  jsonWebTokenOptions: { complete: true },
-  // passReqToCallback: true,
+  jsonWebTokenOptions: { complete: true, algorithms: ["HS256"] },
+  passReqToCallback: false,
   algorithms: ["HS256"],
 };
 
@@ -17,8 +17,10 @@ export const passportConfig = (passport: any) => {
   passport.use(
     new Strategy(options, async (jwtPayload, done) => {
       try {
-        console.log(jwtPayload)
-        const user = await Users.findOne({ username: jwtPayload.payload.payload.username });
+        console.log(jwtPayload);
+        const user = await Users.findOne({
+          username: jwtPayload.payload.payload.username,
+        });
         // Replace with your User model method to find a user by ID
         console.log("passportConfigs", user);
         if (user) {
@@ -32,15 +34,15 @@ export const passportConfig = (passport: any) => {
   );
 };
 
+// // Session serialization and deserialization
 // passport.serializeUser((req: any, user: any, done: any) => {
-//   done(null, user);
+//   console.log("serialize", user);
+//   done(null, { username: user.username, password: user.password });
 // });
 
-// passport.deserializeUser(async (req: any, id: any, done: any) => {
-//   console.log(id);
+// passport.deserializeUser(async (id: any, done: any) => {
 //   try {
-//     const user = await Users.findOne({ username: id }); // Replace with your User model method to find a user by ID
-//     console.log(id);
+//     const user = await Users.findById({ id }); // Replace with your User model method to find a user by ID
 //     if (user) {
 //       done(null, user);
 //     } else {
@@ -50,4 +52,3 @@ export const passportConfig = (passport: any) => {
 //     done(error, false);
 //   }
 // });
-// Session serialization and deserialization

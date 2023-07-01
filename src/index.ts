@@ -25,20 +25,20 @@ app.use(cors({}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
-// app.use(
-//   session({
-//     secret: process.env.SECRET_API_KEY!, // Replace with your own session secret key
-//     resave: false,
-//     saveUninitialized: false,
-//     store: services.sessionStore,
-//     name: Math.random().toString(),
-//   })
-// );
+app.use(
+  session({
+    secret: process.env.SECRET_API_KEY!, // Replace with your own session secret key
+    resave: false,
+    saveUninitialized: false,
+    store: services.sessionStore,
+    name: Math.random().toString(),
+  })
+);
 
 // * passport middleware
 
 app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.session());
 Configs.passportConfig(passport);
 
 

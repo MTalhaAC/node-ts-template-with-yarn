@@ -22,10 +22,7 @@ export const createTheJWTForClient = async (
       expiresIn: "1h",
     }); // Replace with your own secret key
     // Return the token to the client
-    // Store the token in the session
-    // (req.session as any).token = token;
-    // const hashSecretKey:string = await utils.password.hashPassword(secretKey);
-    // (req.session as any).secretKey = hashSecretKey;
+
     return token;
   } catch (error) {
     services.handleTheErrorLogs(req, res, error);

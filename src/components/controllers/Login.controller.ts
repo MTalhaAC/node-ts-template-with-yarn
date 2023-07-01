@@ -3,6 +3,7 @@ import utils from "../utils/index.utils";
 import { IUser, Users } from "../models/user.models";
 import { returnType } from "../types/global";
 import services from "../services/index.service";
+import Configs from "../configs/index.configs";
 
 export const Login_GET = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -11,7 +12,7 @@ export const Login_GET = async (req: Request, res: Response): Promise<void> => {
      */
     res.send("<h1>Login Response</h1>");
   } catch (error) {
-    services.handleTheErrorLogs(req,res,error);
+    services.handleTheErrorLogs(req, res, error);
   }
 };
 
@@ -42,10 +43,17 @@ export const Login_POST = async (
       res.status(403).json({ message: "invalid password" });
       return;
     }
-
-    res.status(200).json({ message: "Login Successfully" });
+    const token = await services.createTheJWTForClient(
+      { username: user.username, password: user.password } as IUser,
+      res,
+      req,
+      Configs.SECRET_KEY
+    );
+    // Store the token in the session
+    (req.session as any).token = token;
+    res.status(200).json({ message: "Login Successfully", token });
   } catch (error) {
-    services.handleTheErrorLogs(req,res,error);
+    services.handleTheErrorLogs(req, res, error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -69,11 +77,9 @@ export const Login_PUT = async (req: Request, res: Response): Promise<void> => {
 
     let { username } = user;
 
-    
-    let hashedPassword: string | undefined = Payload.password? await utils.password.hashPassword(
-      Payload.password
-    ): undefined;
-
+    let hashedPassword: string | undefined = Payload.password
+      ? await utils.password.hashPassword(Payload.password)
+      : undefined;
 
     const result = await Users.findOneAndUpdate(
       { username },
@@ -87,7 +93,7 @@ export const Login_PUT = async (req: Request, res: Response): Promise<void> => {
 
     res.status(200).json({ message: "Update successfully" });
   } catch (error) {
-    services.handleTheErrorLogs(req,res,error);
+    services.handleTheErrorLogs(req, res, error);
     res.status(500).json({ message: "Server error" });
   }
 };

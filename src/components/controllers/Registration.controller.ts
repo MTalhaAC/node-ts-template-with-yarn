@@ -35,13 +35,8 @@ export const Register_POST = async (
     const newUser = new Users({ username, password: hashedPassword });
 
     const result = await newUser.save();
-    const token = await services.createTheJWTForClient(
-      { username: result.username, password: result.password } as IUser,
-      res,
-      req,
-      Configs.SECRET_KEY
-    );
-    res.status(201).json({ message: "User created successfully", token });
+
+    res.status(201).json({ message: "User created successfully"});
   } catch (error) {
     services.handleTheErrorLogs(req, res, error);
     res.status(500).json({ message: "Server error" });
