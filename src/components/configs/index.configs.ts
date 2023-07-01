@@ -2,6 +2,7 @@
  * * Configs the mongoose
  */
 import mongoose from "mongoose";
+import { SECRET_KEY, passportConfig } from "./passport.configs";
 const ConfigMongoose = async (database: string, options?: mongoose.MongooseOptions) => {
   await mongoose
     .connect(process.env.LOCAL_MONGODB_URL + `${database}`,{ })
@@ -10,6 +11,8 @@ const ConfigMongoose = async (database: string, options?: mongoose.MongooseOptio
 
 const Configs = {
   ConfigMongoose,
+  passportConfig,
+  SECRET_KEY
 };
 
 export default Configs;

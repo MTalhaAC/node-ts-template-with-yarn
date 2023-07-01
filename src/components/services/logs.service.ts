@@ -22,11 +22,13 @@ export const createLogs = (options: MongoDBConnectionOptions): Logger => {
 export const createErrorLogs = createLogs;
 
 export const createProperties = (req: Request, res: Response) => {
+  const params = req.params
   return {
     endpoint: `${req.protocol}://${req.headers.host}`,
     requestMethod: req.method,
     requestUrl: req.originalUrl,
     timestamp: new Date(),
+    params: params,
   } as TOptionalILogs;
 };
 
