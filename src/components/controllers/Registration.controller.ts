@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { IUser, Users } from "../models/user.models";
 import { hashPassword } from "../utils/password.utils";
 import utils from "../utils/index.utils";
+import services from "../services/index.service";
 
 export const Register_GET = async (
   req: Request,
@@ -9,7 +10,9 @@ export const Register_GET = async (
 ): Promise<void> => {
   try {
     res.send("User Data Here Soon!");
-  } catch (error) {}
+  } catch (error) {
+    services.handleTheErrorLogs(req,res,error);
+  }
 };
 export const Register_POST = async (
   req: Request,
@@ -32,7 +35,7 @@ export const Register_POST = async (
 
     res.status(201).json({ message: "User created successfully" });
   } catch (error) {
-    console.error(error);
+    services.handleTheErrorLogs(req,res,error);
     res.status(500).json({ message: "Server error" });
   }
 };

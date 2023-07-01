@@ -6,7 +6,8 @@ export const AuthenticationRoutes: Router = Router();
 
 // * Login routes
 AuthenticationRoutes.get("/auth/login",Controllers.Login.Login_GET);
-AuthenticationRoutes.post("/auth/login",passport.authenticate('local'),Controllers.Login.Login_POST);
+AuthenticationRoutes.post("/auth/login",Controllers.Login.Login_POST);
+AuthenticationRoutes.put("/auth/login/:username",Controllers.Login.Login_PUT);
 
 //* Registration routes
 AuthenticationRoutes.get("/auth/register",Controllers.Registration.Register_GET);

@@ -1,18 +1,93 @@
-import { NextFunction, Request,Response} from "express";
+import { NextFunction, Request, Response } from "express";
+import utils from "../utils/index.utils";
+import { IUser, Users } from "../models/user.models";
+import { returnType } from "../types/global";
+import services from "../services/index.service";
 
-export const Login_GET = async (req:Request,res:Response):Promise<void> =>{
-    try {
-        
-        res.send("<h1>Login Response</h1>");
-    } catch (error) {
-        
-    }
-}
+export const Login_GET = async (req: Request, res: Response): Promise<void> => {
+  try {
+    /**
+     * Here send the user credentials using token based authentication soon.
+     */
+    res.send("<h1>Login Response</h1>");
+  } catch (error) {
+    services.handleTheErrorLogs(req,res,error);
+  }
+};
 
-export const Login_POST = async(req:Request,res:Response,next:NextFunction):Promise<void> => {
-    try {
-       
-    } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+export const Login_POST = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { username, password } =
+      utils._GlobalUtils.returnObjectFromRequestBody(req);
+
+    let user = await Users.findOne({ username });
+
+    if (!user) {
+      res
+        .status(404)
+        .json({ message: "User doesn't exist Or incorrect username" });
+      return;
     }
-}
+
+    let isMatch: boolean = await utils.password.comparePasswords(
+      password,
+      user?.password!
+    );
+
+    if (!isMatch) {
+      res.status(403).json({ message: "invalid password" });
+      return;
+    }
+
+    res.status(200).json({ message: "Login Successfully" });
+  } catch (error) {
+    services.handleTheErrorLogs(req,res,error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const Login_PUT = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { Payload, ParamsQuery } = <returnType>(
+      utils._GlobalUtils.returnObjectFromRequestBodyWithOnlyUsername(req)
+    ); // * Return the username from request body
+    let paramsUsername: string = ParamsQuery.username;
+
+    // * Find the User in database if exist then
+    const user = await Users.findOne({ username: paramsUsername });
+
+    if (!user) {
+      res
+        .status(404)
+        .json({ message: "User doesn't exist Or incorrect username" });
+      return;
+    }
+
+    let { username } = user;
+
+    
+    let hashedPassword: string | undefined = Payload.password? await utils.password.hashPassword(
+      Payload.password
+    ): undefined;
+
+
+    const result = await Users.findOneAndUpdate(
+      { username },
+      { username: Payload.username, password: hashedPassword }
+    );
+
+    if (!result) {
+      res.status(500).json({ message: "Server error" });
+      return;
+    }
+
+    res.status(200).json({ message: "Update successfully" });
+  } catch (error) {
+    services.handleTheErrorLogs(req,res,error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
