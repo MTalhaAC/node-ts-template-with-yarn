@@ -13,10 +13,4 @@ const userSchema = new Schema<IUser>({
   password: String,
 });
 
-// userSchema.pre<IUser>('save',async function(next:CallbackWithoutResultAndOptionalError){
-//   const hashedPassword:string = await utils.password.hashPassword(this.password);
-//   this.password = hashedPassword;
-//   next();
-// })
-
 export const Users = model<IUser>('User', userSchema);

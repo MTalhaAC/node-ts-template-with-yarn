@@ -1,4 +1,8 @@
-import { returnObjectFromRequestBody, returnObjectFromRequestBodyWithOnlyUsername } from "./global.utils";
+import { feedbackForRoutes } from "./feedback.utils";
+import {
+  returnObjectFromRequestBody,
+  returnObjectFromRequestBodyWithOnlyUsername,
+} from "./global.utils";
 import { hashPassword, comparePasswords } from "./password.utils";
 
 const utils = {
@@ -8,7 +12,10 @@ const utils = {
   },
   _GlobalUtils: {
     returnObjectFromRequestBody,
-    returnObjectFromRequestBodyWithOnlyUsername
+    returnObjectFromRequestBodyWithOnlyUsername,
+  },
+  _FeedBack: {
+    feedbackForRoutes
   },
 };
 
