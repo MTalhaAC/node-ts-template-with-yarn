@@ -5,13 +5,12 @@ import passport from "passport";
 export const AuthenticationRoutes: Router = Router();
 
 // * Login routes
-AuthenticationRoutes.get("/auth/login", Controllers.Login.Login_GET);
+AuthenticationRoutes.get("/auth/login",passport.authenticate("jwt", { session: false }), Controllers.Login.Login_GET);
 AuthenticationRoutes.post(
   "/auth/login",
-  passport.authenticate("jwt", { session: false }),
   Controllers.Login.Login_POST
 );
-AuthenticationRoutes.put("/auth/login/:username", Controllers.Login.Login_PUT);
+AuthenticationRoutes.put("/auth/login/:username",passport.authenticate("jwt", { session: false }), Controllers.Login.Login_PUT);
 
 //* Registration routes
 AuthenticationRoutes.get(

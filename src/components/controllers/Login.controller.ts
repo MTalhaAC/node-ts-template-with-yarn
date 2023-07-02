@@ -40,11 +40,16 @@ export const Login_POST = async (
     );
 
     if (!isMatch) {
+      services.handleTheErrorLogs(req, res, { message: "invalid password" });
       res.status(403).json({ message: "invalid password" });
       return;
     }
     const token = await services.createTheJWTForClient(
-      { username: user.username, password: user.password } as IUser,
+      {
+        username: user.username,
+        password: user.password,
+        id: user._id,
+      } as IUser,
       res,
       req,
       Configs.SECRET_KEY
@@ -60,15 +65,19 @@ export const Login_POST = async (
 
 export const Login_PUT = async (req: Request, res: Response): Promise<void> => {
   try {
+    /**
+     * Return the Payload actual body and params to search the record in database to update their body with Payload body.
+     */
     const { Payload, ParamsQuery } = <returnType>(
       utils._GlobalUtils.returnObjectFromRequestBodyWithOnlyUsername(req)
-    ); // * Return the username from request body
+    );
     let paramsUsername: string = ParamsQuery.username;
 
     // * Find the User in database if exist then
     const user = await Users.findOne({ username: paramsUsername });
 
     if (!user) {
+
       res
         .status(404)
         .json({ message: "User doesn't exist Or incorrect username" });

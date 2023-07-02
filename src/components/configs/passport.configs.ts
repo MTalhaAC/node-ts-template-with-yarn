@@ -17,12 +17,9 @@ export const passportConfig = (passport: any) => {
   passport.use(
     new Strategy(options, async (jwtPayload, done) => {
       try {
-        console.log(jwtPayload);
         const user = await Users.findOne({
           username: jwtPayload.payload.payload.username,
         });
-        // Replace with your User model method to find a user by ID
-        console.log("passportConfigs", user);
         if (user) {
           return done(null, user);
         }
@@ -34,21 +31,3 @@ export const passportConfig = (passport: any) => {
   );
 };
 
-// // Session serialization and deserialization
-// passport.serializeUser((req: any, user: any, done: any) => {
-//   console.log("serialize", user);
-//   done(null, { username: user.username, password: user.password });
-// });
-
-// passport.deserializeUser(async (id: any, done: any) => {
-//   try {
-//     const user = await Users.findById({ id }); // Replace with your User model method to find a user by ID
-//     if (user) {
-//       done(null, user);
-//     } else {
-//       done(null, false);
-//     }
-//   } catch (error) {
-//     done(error, false);
-//   }
-// });
