@@ -77,7 +77,6 @@ export const Login_PUT = async (req: Request, res: Response): Promise<void> => {
     const user = await Users.findOne({ username: paramsUsername });
 
     if (!user) {
-
       res
         .status(404)
         .json({ message: "User doesn't exist Or incorrect username" });
@@ -90,17 +89,43 @@ export const Login_PUT = async (req: Request, res: Response): Promise<void> => {
       ? await utils.password.hashPassword(Payload.password)
       : undefined;
 
-    const result = await Users.findOneAndUpdate(
+    const UserDocs = await Users.findOneAndUpdate(
       { username },
-      { username: Payload.username, password: hashedPassword }
+      { username: Payload.username, password: hashedPassword },
+      {
+        returnDocument: "after",
+      }
     );
 
-    if (!result) {
+    if (!UserDocs) {
       res.status(500).json({ message: "Server error" });
       return;
     }
 
-    res.status(200).json({ message: "Update successfully" });
+    console.log(UserDocs);
+
+    /**
+     * Here we create the new jwt credentials based on the modified field and return back to the client.
+     */
+    const newJWTCredentials: string | undefined =
+      await services.createTheJWTForClient(
+        {
+          username: UserDocs.username,
+          password: UserDocs.password,
+          id: UserDocs._id,
+        } as IUser,
+        res,
+        req,
+        Configs.SECRET_KEY
+      );
+
+    res
+      .status(200)
+      .json({
+        message: "Update successfully",
+        token: newJWTCredentials,
+        timestamp: new Date(),
+      });
   } catch (error) {
     services.handleTheErrorLogs(req, res, error);
     res.status(500).json({ message: "Server error" });

@@ -15,10 +15,10 @@ export const returnObjectFromRequestBody = (req: Request): IUser => {
 };
 
 export const returnObjectFromRequestBodyWithOnlyUsername = <
-  TBody extends IUser 
+  TBody extends IUser
 >(
   req: Request
-):returnType => {
+): returnType => {
   const Payload: TBody = Object.keys(req.body).includes("data")
     ? ({
         username: req.body.data.username,
@@ -35,3 +35,4 @@ export const returnObjectFromRequestBodyWithOnlyUsername = <
     ParamsQuery,
   };
 };
+

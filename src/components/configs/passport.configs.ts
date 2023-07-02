@@ -1,9 +1,11 @@
+import DotEnv from "dotenv";
+DotEnv.config();
 import { Strategy, ExtractJwt, StrategyOptions } from "passport-jwt";
 import { Users } from "../models/user.models"; // Replace with your User model
 import passport from "passport";
 import { Request } from "express";
 
-export const SECRET_KEY: string = "hello fucker!";
+export const SECRET_KEY: string = process.env.SECRET_KEY!;
 
 const options: StrategyOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -30,4 +32,3 @@ export const passportConfig = (passport: any) => {
     })
   );
 };
-
