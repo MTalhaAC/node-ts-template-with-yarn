@@ -1,6 +1,6 @@
 import winston, { Logger, transport, transports } from "winston";
 import middlewares, { TOptionalILogs } from "../middlewares/index.middleware";
-import utils from "./index.utils";
+import services from "./index.service";
 import { MongoDBConnectionOptions } from "winston-mongodb";
 import "winston-mongodb";
 import { Request, Response } from "express";
@@ -22,11 +22,13 @@ export const createLogs = (options: MongoDBConnectionOptions): Logger => {
 export const createErrorLogs = createLogs;
 
 export const createProperties = (req: Request, res: Response) => {
+  const params = req.params
   return {
-    endpoint: `${req.protocol}://${req.rawHeaders[1]}`,
+    endpoint: `${req.protocol}://${req.headers.host}`,
     requestMethod: req.method,
     requestUrl: req.originalUrl,
     timestamp: new Date(),
+    params: params,
   } as TOptionalILogs;
 };
 
@@ -36,7 +38,7 @@ export const handleTheErrorLogs = (
   error: unknown
 ) => {
   middlewares.ErrorLogs({
-    ...utils.createProperties(req, res),
+    ...services.createProperties(req, res),
     error,
   });
 };

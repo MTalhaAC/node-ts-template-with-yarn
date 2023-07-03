@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Models from "../models/index.models";
-import utils from "../utils/index.utils";
+import services from "../services/index.service";
 
 
 export const getLogs = async ( req: Request, res: Response ): Promise<void> =>
@@ -12,7 +12,7 @@ export const getLogs = async ( req: Request, res: Response ): Promise<void> =>
     } catch ( error )
     {
         console.error( "Error Message From GetLogs Methods",error );
-        utils.handleTheErrorLogs(req,res,error); /// ? Logs handler for Errors
+        services.handleTheErrorLogs(req,res,error); /// ? Logs handler for Errors
     }
 
 };
@@ -24,6 +24,6 @@ export const createLogs = async ( req: Request, res: Response ): Promise<void> =
         res.send( "Post Logs Working Correctly" );
     } catch ( error )
     {
-        utils.handleTheErrorLogs(req,res,error); // ? Logs handler for Errors 
+        services.handleTheErrorLogs(req,res,error); // ? Logs handler for Errors 
     }
 }

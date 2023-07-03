@@ -1,15 +1,23 @@
 import { NextFunction, Request, Response } from "express";
 import { ILog } from "../models/logs.models";
-import utils from "../utils/index.utils";
+import services from "../services/index.service";
 import { FileLogsMiddleware } from "./filelogs.middleware";
+import { isAuthenticated } from "./passport.middleware";
 
-export type TOptionalILogs = Partial<Omit<ILog,"userId" & "userAgent">>
+/*
+* Custome Type for the file logs object.
+ */
+export type TOptionalILogs = Partial<Omit<ILog, "userId" & "userAgent">>;
 
-
-const logsMiddleware = ( req: Request, res: Response, next: NextFunction ) =>
-{
+/**
+ * * logsMiddleware is middleware that creates the logs collections in database and generate the log documents.
+ * @param req  type Request
+ * @param res  type Response
+ * @param next type NextFunction
+ */
+const logsMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const meta: ILog = {
-    endpoint: `${req.protocol}://${req.rawHeaders[ 1 ]}`,
+    endpoint: `${req.protocol}://${req.headers.host}`,
     requestMethod: req.method,
     requestUrl: req.originalUrl,
     responseStatusCode: res.statusCode,
@@ -17,40 +25,41 @@ const logsMiddleware = ( req: Request, res: Response, next: NextFunction ) =>
     userId: "",
     userIpAddress: req.ip,
     requestPayload: { Payload: req?.body },
-    userAgent: req.headers[ 'user-agent' ]
+    userAgent: req.headers["user-agent"],
   };
 
-  let originalSend = res.send;
   // * response payload tracking for json response only
-
-  res.send = function ( body )
-  {
-    meta.responsePayload = { body };
-    utils.createLogs( {
-      db: process.env.MONGODB_URL + "Server",
+  services
+    .createLogs({
+      db: process.env.LOCAL_MONGODB_URL + "Server",
       collection: "logs",
       level: "info",
       options: { useUnifiedTopology: true },
-    } ).log( 'info', "Info-Logs", meta );
-
-    return originalSend.call( this, body );
-  };
+    })
+    .log("info", "Info-Logs", meta);
   next();
-}
+};
 
-const ErrorLogs = (meta:{ error: unknown} & TOptionalILogs) =>
-{
-  utils.createErrorLogs( {
-    db: process.env.MONGODB_URL + "Server",
-    collection:"errors",
-    level:"error",
-    options: { useUnifiedTopology: true },
-  } ).log('error','Errors_Logs',meta);
-}
+/**
+ * * ErrorLogs is a function not middleware but used the same signature like middleware. It used to create the errors collection and generates error logs documents. 
+ * @param meta  type {error:unknown}
+ */
+const ErrorLogs = (meta: { error: unknown } & TOptionalILogs) => {
+  services
+    .createErrorLogs({
+      db: process.env.LOCAL_MONGODB_URL + "Server",
+      collection: "errors",
+      level: "error",
+      options: { useUnifiedTopology: true },
+    })
+    .log("error", "Errors_Logs", meta);
+};
+
 const middlewares = {
   logsMiddleware,
   ErrorLogs,
   FileLogsMiddleware,
-}
+  isAuthenticated
+};
 
 export default middlewares;

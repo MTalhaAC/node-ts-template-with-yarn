@@ -1,20 +1,22 @@
-import { Model, Schema } from "mongoose";
-import { createErrorLogs, createLogs, createProperties, handleTheErrorLogs,localLogs } from "./logs.utils";
-
-
-
-const createNewModels = <T extends Schema>(model: Model<T>, schema: Schema) => {
-  return new model({ ...schema });
-};
-
+import { feedbackForRoutes } from "./feedback.utils";
+import {
+  returnObjectFromRequestBody,
+  returnObjectFromRequestBodyWithOnlyUsername,
+} from "./global.utils";
+import { hashPassword, comparePasswords } from "./password.utils";
 
 const utils = {
-  createNewModels,
-  createLogs,
-  createErrorLogs,
-  createProperties,
-  handleTheErrorLogs,
-  localLogs
+  password: {
+    hashPassword,
+    comparePasswords,
+  },
+  _GlobalUtils: {
+    returnObjectFromRequestBody,
+    returnObjectFromRequestBodyWithOnlyUsername,
+  },
+  _FeedBack: {
+    feedbackForRoutes
+  },
 };
 
 export default utils;
