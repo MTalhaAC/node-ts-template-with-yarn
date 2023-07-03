@@ -5,14 +5,18 @@ import { returnType } from "../types/global";
 import services from "../services/index.service";
 import Configs from "../configs/index.configs";
 
-export const Login_GET = async (req: Request, res: Response): Promise<void> => {
-  try {
+export const Login_GET = async ( req: Request, res: Response ): Promise<void> =>
+{
+  try
+  {
     /**
      * Here send the user credentials using token based authentication soon.
      */
 
+    let Query = req.query;
+
     res.json(
-      utils._FeedBack.feedbackForRoutes({
+      utils._FeedBack.feedbackForRoutes( {
         success: true,
         message: "OK|DONE|SUCCESSFUL|COMPLETED",
         data: {
@@ -26,10 +30,11 @@ export const Login_GET = async (req: Request, res: Response): Promise<void> => {
             },
           },
         },
-      })
+      } )
     );
-  } catch (error) {
-    services.handleTheErrorLogs(req, res, error);
+  } catch ( error )
+  {
+    services.handleTheErrorLogs( req, res, error as Error );
   }
 };
 
@@ -37,16 +42,20 @@ export const Login_POST = async (
   req: Request,
   res: Response,
   next: NextFunction
-): Promise<void> => {
-  try {
+): Promise<void> =>
+{
+  try
+  {
     const { username, password } =
-      utils._GlobalUtils.returnObjectFromRequestBody(req);
+      utils._GlobalUtils.returnObjectFromRequestBody( req );
 
-    let user = await Users.findOne({ username });
+    let user = await Users.findOne( { username } );
 
-    if (!user) {
-      res.status(404).json(
-        utils._FeedBack.feedbackForRoutes({
+    if ( !user )
+    {
+      services.handleTheErrorLogs( req, res, { message: "User doesn't exist Or incorrect username" } as Error );
+      res.status( 404 ).json(
+        utils._FeedBack.feedbackForRoutes( {
           success: false,
           message: "FAIL|ONGOING|UNSUCCESSFUL|UNCOMPLETED",
           data: {
@@ -60,7 +69,7 @@ export const Login_POST = async (
               },
             },
           },
-        })
+        } )
       );
       return;
     }
@@ -70,10 +79,11 @@ export const Login_POST = async (
       user?.password!
     );
 
-    if (!isMatch) {
-      services.handleTheErrorLogs(req, res, { message: "invalid password" });
-      res.status(403).json(
-        utils._FeedBack.feedbackForRoutes({
+    if ( !isMatch )
+    {
+      services.handleTheErrorLogs( req, res, { message: "invalid password" } as Error );
+      res.status( 403 ).json(
+        utils._FeedBack.feedbackForRoutes( {
           success: false,
           message: "FAIL|ONGOING|UNSUCCESSFUL|UNCOMPLETED|UNAUTHORIZED",
           data: {
@@ -87,7 +97,7 @@ export const Login_POST = async (
               },
             },
           },
-        })
+        } )
       );
       return;
     }
@@ -102,9 +112,9 @@ export const Login_POST = async (
       Configs.SECRET_KEY
     );
     // Store the token in the session
-    (req.session as any).token = token;
-    res.status(200).json(
-      utils._FeedBack.feedbackForRoutes({
+    ( req.session as any ).token = token;
+    res.status( 200 ).json(
+      utils._FeedBack.feedbackForRoutes( {
         success: true,
         message: "OK|DONE|SUCCESSFUL|COMPLETED",
         data: {
@@ -118,12 +128,13 @@ export const Login_POST = async (
             },
           },
         },
-      })
+      } )
     );
-  } catch (error) {
-    services.handleTheErrorLogs(req, res, error);
-    res.status(500).json(
-      utils._FeedBack.feedbackForRoutes({
+  } catch ( error )
+  {
+    services.handleTheErrorLogs( req, res, error as Error );
+    res.status( 500 ).json(
+      utils._FeedBack.feedbackForRoutes( {
         success: false,
         message: "FAIL|ONGOING|UNSUCCESSFUL|UNCOMPLETED|SERVERERROR",
         data: {
@@ -137,26 +148,30 @@ export const Login_POST = async (
             },
           },
         },
-      })
+      } )
     );
   }
 };
 
-export const Login_PUT = async (req: Request, res: Response): Promise<void> => {
-  try {
+export const Login_PUT = async ( req: Request, res: Response ): Promise<void> =>
+{
+  try
+  {
     /**
      * Return the Payload actual body and params to search the record in database to update their body with Payload body.
      */
-    const { Payload, ParamsQuery } = <returnType>(
-      utils._GlobalUtils.returnObjectFromRequestBodyWithOnlyUsername(req)
+    const { Payload, ParamsQuery } = <returnType> (
+      utils._GlobalUtils.returnObjectFromRequestBodyWithOnlyUsername( req )
     );
     let paramsUsername: string = ParamsQuery.username;
 
     // * Find the User in database if exist then
-    const user = await Users.findOne({ username: paramsUsername });
-    if (!user) {
-      res.status(404).json(
-        utils._FeedBack.feedbackForRoutes({
+    const user = await Users.findOne( { username: paramsUsername } );
+    if ( !user )
+    {
+
+      res.status( 404 ).json(
+        utils._FeedBack.feedbackForRoutes( {
           success: false,
           message: "FAIL|ONGOING|UNSUCCESSFUL|UNCOMPLETED|NOTFOUND",
           data: {
@@ -170,15 +185,16 @@ export const Login_PUT = async (req: Request, res: Response): Promise<void> => {
               },
             },
           },
-        })
+        } )
       );
+      services.handleTheErrorLogs( req, res, { message: "User doesn't exist Or incorrect username" } as Error );
       return;
     }
 
     let { username } = user;
 
     let hashedPassword: string | undefined = Payload.password
-      ? await utils.password.hashPassword(Payload.password)
+      ? await utils.password.hashPassword( Payload.password )
       : undefined;
 
     const UserDocs = await Users.findOneAndUpdate(
@@ -189,9 +205,11 @@ export const Login_PUT = async (req: Request, res: Response): Promise<void> => {
       }
     );
 
-    if (!UserDocs) {
-      res.status(500).json(
-        utils._FeedBack.feedbackForRoutes({
+    if ( !UserDocs )
+    {
+
+      res.status( 500 ).json(
+        utils._FeedBack.feedbackForRoutes( {
           success: false,
           message: "FAIL|ONGOING|UNSUCCESSFUL|UNCOMPLETED|SERVERERROR",
           data: {
@@ -205,12 +223,11 @@ export const Login_PUT = async (req: Request, res: Response): Promise<void> => {
               },
             },
           },
-        })
+        } )
       );
+      services.handleTheErrorLogs( req, res, { message: "Server error" } as Error );
       return;
     }
-
-    console.log(UserDocs);
 
     /**
      * Here we create the new jwt credentials based on the modified field and return back to the client.
@@ -227,8 +244,11 @@ export const Login_PUT = async (req: Request, res: Response): Promise<void> => {
         Configs.SECRET_KEY
       );
 
-    res.status(200).json(
-      utils._FeedBack.feedbackForRoutes({
+    // Store the token in the session
+    ( req.session as any ).token = newJWTCredentials;
+
+    res.status( 200 ).json(
+      utils._FeedBack.feedbackForRoutes( {
         success: true,
         message: "OK|DONE|SUCCESSFUL|COMPLETED",
         data: {
@@ -242,12 +262,13 @@ export const Login_PUT = async (req: Request, res: Response): Promise<void> => {
             },
           },
         },
-      })
+      } )
     );
-  } catch (error) {
-    services.handleTheErrorLogs(req, res, error);
-    res.status(500).json(
-      utils._FeedBack.feedbackForRoutes({
+  } catch ( error )
+  {
+
+    res.status( 500 ).json(
+      utils._FeedBack.feedbackForRoutes( {
         success: false,
         message: "FAIL|ONGOING|UNSUCCESSFUL|UNCOMPLETED|SERVERERROR",
         data: {
@@ -261,7 +282,8 @@ export const Login_PUT = async (req: Request, res: Response): Promise<void> => {
             },
           },
         },
-      })
+      } )
     );
+    services.handleTheErrorLogs( req, res, error as Error );
   }
 };

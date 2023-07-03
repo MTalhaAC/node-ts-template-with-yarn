@@ -1,10 +1,12 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema } from "mongoose";
+import { ParamsDictionary, ParsedQs } from "../types/global";
 
 // ? Define the interface for the log document
-export interface ILog {
+export interface ILog
+{
   timestamp: Date;
   endpoint: string;
-  userId: string;
+  userId?: string;
   userIpAddress: string;
   requestMethod: string;
   requestUrl: string;
@@ -12,7 +14,10 @@ export interface ILog {
   responseStatusCode: number;
   responsePayload?: Record<string, any>;
   userAgent?: string;
-  errorMessage?: Error | null|string;
+  errorMessage?: Error | null | string;
+  params?: ParamsDictionary | null;
+
+  query?: ParsedQs;
 }
 
 // * Create the log schema
@@ -59,13 +64,8 @@ const logSchema: Schema = new Schema(
       type: String,
     },
   },
-  { collection: 'logs' } // ** Optional: Specify the collection name
+  { collection: "logs" } // ** Optional: Specify the collection name
 );
 
 // ** Create the log model
-export const LogModel = mongoose.model<ILog>('Log', logSchema);
-
-
-
-
-
+export const LogModel = mongoose.model<ILog>( "Log", logSchema );

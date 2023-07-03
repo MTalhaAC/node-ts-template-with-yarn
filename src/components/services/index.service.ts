@@ -1,5 +1,5 @@
 import { Model, Schema } from "mongoose";
-import { createErrorLogs, createLogs, createProperties, handleTheErrorLogs,localLogs } from "./logs.service";
+import { createErrorLogs, createLogs, createProperties, handleTheErrorLogs, localLogs } from "./logs.service";
 import { createTheJWTForClient } from "./passport.service";
 import { sessionStore } from "./session-store.service";
 
@@ -9,8 +9,9 @@ import { sessionStore } from "./session-store.service";
 
 
 
-const createNewModels = <T extends Schema>(model: Model<T>, schema: Schema) => {
-  return new model({ ...schema });
+const createNewModels = <T extends Schema> ( model: Model<T>, schema: Schema ) =>
+{
+  return new model( { ...schema } );
 };
 
 
@@ -18,8 +19,8 @@ const createNewModels = <T extends Schema>(model: Model<T>, schema: Schema) => {
 const services = {
   createNewModels,
   createLogs,
-  createErrorLogs,
   createProperties,
+  createErrorLogs,
   handleTheErrorLogs,
   localLogs,
   createTheJWTForClient,

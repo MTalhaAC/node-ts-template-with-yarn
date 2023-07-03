@@ -11,32 +11,24 @@ export type TOptionalILogs = Partial<Omit<ILog, "userId" & "userAgent">>;
 
 /**
  * * logsMiddleware is middleware that creates the logs collections in database and generate the log documents.
+ * @param err  type Error
  * @param req  type Request
  * @param res  type Response
  * @param next type NextFunction
  */
-const logsMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  const meta: ILog = {
-    endpoint: `${req.protocol}://${req.headers.host}`,
-    requestMethod: req.method,
-    requestUrl: req.originalUrl,
-    responseStatusCode: res.statusCode,
-    timestamp: new Date(),
-    userId: "",
-    userIpAddress: req.ip,
-    requestPayload: { Payload: req?.body },
-    userAgent: req.headers["user-agent"],
-  };
+const logsMiddleware = ( req: Request, res: Response, next: NextFunction ) =>
+{
+  const meta: ILog = services.createProperties( req, res)
 
   // * response payload tracking for json response only
   services
-    .createLogs({
+    .createLogs( {
       db: process.env.LOCAL_MONGODB_URL + "Server",
       collection: "logs",
       level: "info",
       options: { useUnifiedTopology: true },
-    })
-    .log("info", "Info-Logs", meta);
+    } )
+    .log( "info", "Info-Logs", meta );
   next();
 };
 
@@ -44,15 +36,16 @@ const logsMiddleware = (req: Request, res: Response, next: NextFunction) => {
  * * ErrorLogs is a function not middleware but used the same signature like middleware. It used to create the errors collection and generates error logs documents. 
  * @param meta  type {error:unknown}
  */
-const ErrorLogs = (meta: { error: unknown } & TOptionalILogs) => {
+const ErrorLogs = ( meta: { error: unknown } & TOptionalILogs ) =>
+{
   services
-    .createErrorLogs({
+    .createErrorLogs( {
       db: process.env.LOCAL_MONGODB_URL + "Server",
       collection: "errors",
       level: "error",
       options: { useUnifiedTopology: true },
-    })
-    .log("error", "Errors_Logs", meta);
+    } )
+    .log( "error", "Errors_Logs", meta );
 };
 
 const middlewares = {
