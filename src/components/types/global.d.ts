@@ -2,6 +2,8 @@ import { IUser } from "../models/user.models";
 
 export type PayloadWithOnlyUsername = Omit<IUser, "password">;
 
+export interface ParsedQs { [key: string]: undefined | string | string[] | ParsedQs | ParsedQs[] }
+
 export type ParamsDictionary = {
   [key: string]: string;
 };

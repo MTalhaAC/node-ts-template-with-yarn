@@ -6,16 +6,9 @@ export const FileLogsMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
-  const meta: ILog = {
-    endpoint: `${req.protocol}://${req.headers.host}`,
-    requestMethod: req.method,
-    requestUrl: req.originalUrl,
-    responseStatusCode: res.statusCode,
-    timestamp: new Date(),
-    userId: "",
-    userIpAddress: req.ip,
-  };
-  services.localLogs(meta);
+) =>
+{
+  const meta: ILog = services.createProperties( req, res);
+  services.localLogs( meta );
   next();
 };
