@@ -26,7 +26,7 @@ app.use(middlewares.logsMiddleware);
 app.use(middlewares.FileLogsMiddleware);
 // * Called the Mongoose Config here
 
-Configs.ConfigMongoose("Server");
+// Configs.ConfigMongoose("Server");
 
 
 // * use the all route over here
